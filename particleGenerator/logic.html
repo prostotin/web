@@ -1,114 +1,193 @@
 <!doctype html>
 <html>
+
 <head>
-<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" charset="utf-8" />
-<title>Welcome</title>
-<link rel="stylesheet" href="pure/pure-min.css" crossorigin="anonymous">
-<link rel="icon" href="favicon.png">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+        charset="utf-8" />
+    <title>Welcome</title>
+
+    <link rel="icon" href="favicon.png">
 
 
-<title>Oleksandr Prostotin's website</title>
+    <title>Oleksandr Prostotin's website</title>
 </head>
 
-<body  scroll="no" style="overflow: hidden"  >
+<body scroll="no" style="overflow: hidden">
 
-<canvas id="backgroundGradient" width="1920" height="1009" class="background">Canvas is not supported in your browser.</canvas>
-<canvas id="particles" width="1920" height="1009" class="particles">Canvas is not supported in your browser.</canvas>
+
+
+    <canvas id="backgroundGradient" width="1920" height="1009" class="background">Canvas is not supported in your
+        browser.</canvas>
+    <canvas id="particles" width="1920" height="1009" class="particles">Canvas is not supported in your
+        browser.</canvas>
+
+    <style>
+        p {
+            color: white;
+            text-shadow: 2px 3px 10px #000000;
+        }
+    </style>
+    <div>
+        <p style="position: relative; font-size:30px;">Number of dots (1-300):</p>
+        <input type="range" min="1" max="300" value="50" class="slider" id="particleAmount">
+        <p style="position: relative; font-size:30px; " for="leftColor">Select left color:</p>
+        <input style="position: relative;" type="color" id="leftColor" name="leftColor" value="#CF3B1B"
+            onchange="changeLeftColor()"><br><br>
+        <p style="position: relative; font-size:30px; " for="rightColor">Select rightcolor:</p>
+        <input style="position: relative;" type="color" id="rightColor" name="rightColor" value="#1BCF36"
+            onchange="changeRightColor()"><br><br>
+    </div>
+
 
 </body>
+
 </html>
 <style>
+    .particles {
+        opacity: 1;
+    }
 
-	.particles {
-    opacity: 1;
-}
-.background {
-    opacity: 1;
-}
-canvas {
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    opacity: 1;
-}
+    .background {
+        opacity: 1;
+    }
 
+
+    .slider {
+        -webkit-appearance: none;
+        /* Override default CSS styles */
+        appearance: none;
+        width: 20%;
+        /* Full-width */
+        height: 10px;
+        /* Specified height */
+        background: #d3d3d3;
+        /* Grey background */
+        outline: none;
+        /* Remove outline */
+        opacity: 0.9;
+        /* Set transparency (for mouse-over effects on hover) */
+        -webkit-transition: .2s;
+        /* 0.2 seconds transition on hover */
+        transition: opacity .2s;
+    }
+
+
+    canvas {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        opacity: 1;
+    }
 </style>
 <script>
-		var isMobile = {
-    Android: function() {
-        return navigator.userAgent.match(/Android/i);
-    },
-    BlackBerry: function() {
-        return navigator.userAgent.match(/BlackBerry/i);
-    },
-    iOS: function() {
-        return navigator.userAgent.match(/iPhone|iPad|iPod/i);
-    },
-    Opera: function() {
-        return navigator.userAgent.match(/Opera Mini/i);
-    },
-    Windows: function() {
-        return navigator.userAgent.match(/IEMobile/i) || navigator.userAgent.match(/WPDesktop/i);
-    },
-    any: function() {
-        return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
-    }
-};
+    var isMobile = {
+        Android: function () {
+            return navigator.userAgent.match(/Android/i);
+        },
+        BlackBerry: function () {
+            return navigator.userAgent.match(/BlackBerry/i);
+        },
+        iOS: function () {
+            return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+        },
+        Opera: function () {
+            return navigator.userAgent.match(/Opera Mini/i);
+        },
+        Windows: function () {
+            return navigator.userAgent.match(/IEMobile/i) || navigator.userAgent.match(/WPDesktop/i);
+        },
+        any: function () {
+            return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+        }
+    };
 
-//initialize
 
-	var particlesCanvas = document.getElementById('particles');
+
+
+    //initialize
+
+    var particlesCanvas = document.getElementById('particles');
     var particlesContext = particlesCanvas.getContext('2d');
     var w = document.documentElement.clientWidth,
         h = document.documentElement.clientHeight;
     document.getElementById('particles').width = w;
     document.getElementById('particles').height = h;
 
-  var backgroundCanvas = document.getElementById("backgroundGradient");
-	var backgroundContext = backgroundCanvas.getContext("2d");
-	var backgroundGradient = backgroundContext.createLinearGradient(0,0,w,0);
+    var backgroundCanvas = document.getElementById("backgroundGradient");
+    var backgroundContext = backgroundCanvas.getContext("2d");
+    var backgroundGradient = backgroundContext.createLinearGradient(0, 0, w, 0);
+    var particles = []; //new Array[{xspeed:2, yspeed:2, x:100, y:100};
+    var multiplier = 1.5;
+    //if we're on mobile limit the amount of particles to 25 because it looks really bad with more than that
 
-//if we're on mobile limit the amount of particles to 25 because it looks really bad with more than that
-
-	var maxParticlesCount;
+	/*var maxParticlesCount;
 	if(isMobile.any()){
     maxParticlesCount = 25;
 	} else{
 		maxParticlesCount = 150;
 	}
-    var particleRadius = 3;
+    */
+    var amountSlider = document.getElementById("particleAmount");
 
-    var particles = []; //new Array[{xspeed:2, yspeed:2, x:100, y:100};
-    function randomIntP(min, max) {
-        return Math.floor(Math.random() * (max - min) + min);
+
+    maxParticlesCount = amountSlider.value; // Display the default slider value
+    generateParticles(maxParticlesCount);
+    // Update the current slider value (each time you drag the slider handle)
+
+    amountSlider.oninput = function () {
+        maxParticlesCount = this.value;
+        generateParticles(maxParticlesCount);
+
+
     }
 
-	//"initialize" particles with x, y, and speed
-    for (var i = 0; i < maxParticlesCount; i++) {
-        particles.push({
-            xspeed: randomIntP(-1, 1)/2,
-            yspeed: randomIntP(-1, 1)/2,
-            x: randomIntP(w-50, 1),
-            y: randomIntP(h-50, 1),
 
-        });
-    }
 
-	//remove stationary particles and particles that only move accross 1 axis
-    for (var i = 0; i < maxParticlesCount; i++) {
-        if (particles[i].xspeed == 0) {
-            particles[i].xspeed++;
+    function generateParticles(maxParticlesCount) {
+        console.log(maxParticlesCount);
+        var particleRadius = 3;
+
+
+        function randomIntP(min, max) {
+            return Math.floor(Math.random() * (max - min) + min);
         }
-        if (particles[i].yspeed == 0) {
-            particles[i].yspeed++;
-        }
-    }
-	function intersects(x,y,x1,y1,i,j,i1,j1){ //xy of box... if
+        //"initialize" particles with x, y, and speed
+        for (var i = 0; i < maxParticlesCount; i++) {
+            particles.push({
 
-	}
-	setInterval(function() {
+                xspeed: randomIntP(-1, 1) / 2,
+
+                yspeed: randomIntP(-1, 1) / 2,
+                x: randomIntP(w - 50, 1),
+                y: randomIntP(h - 50, 1),
+
+            });
+
+        }
+
+        //remove stationary particles and particles that only move accross 1 axis
+        for (var i = 0; i < maxParticlesCount; i++) {
+            if (particles[i].xspeed == 0) {
+                particles[i].xspeed++;
+            }
+            if (particles[i].yspeed == 0) {
+                particles[i].yspeed++;
+            }
+        }
+
+    }
+
+
+
+
+
+
+
+
+    setInterval(function () {
+
         particlesContext.clearRect(0, 0, w, h);
         for (var i = 0; i < maxParticlesCount; i++) {
 
@@ -127,34 +206,34 @@ canvas {
             particles[i].x += particles[i].xspeed;
             particles[i].y += particles[i].yspeed;
 
-			//onmousemove = function(e){console.log("mouse location:", e.clientX, e.clientY)}
+            //onmousemove = function(e){console.log("mouse location:", e.clientX, e.clientY)}
 
 
 
 
-			particlesContext.beginPath();
-			particlesContext.arc(particles[i].x, particles[i].y, 4, 0, 2 * Math.PI);
-			particlesContext.globalAlpha = 0.8;
-			particlesContext.fillStyle = "white";
-			particlesContext.closePath();
-			particlesContext.stroke();
-			particlesContext.fill();
+            particlesContext.beginPath();
+            particlesContext.arc(particles[i].x, particles[i].y, 4, 0, 2 * Math.PI);
+            particlesContext.globalAlpha = 0.8;
+            particlesContext.fillStyle = "white";
+            particlesContext.closePath();
+            particlesContext.stroke();
+            particlesContext.fill();
             for (var j = 0; j < maxParticlesCount; j++) {
                 if (j != i) {
 
                     if (Math.abs((particles[i].x - particles[j].x)) < 150 && (Math.abs((particles[i].y - particles[j].y)) < 150)) {
                         particlesContext.beginPath();
-						//a^2 + b^2  = c^2
-						//calculate distance to next point
-						var a = Math.pow((Math.abs((particles[i].x - particles[j].x))),2);
-						var b = Math.pow((Math.abs((particles[i].y - particles[j].y))),2);
+                        //a^2 + b^2  = c^2
+                        //calculate distance to next point
+                        var a = Math.pow((Math.abs((particles[i].x - particles[j].x))), 2);
+                        var b = Math.pow((Math.abs((particles[i].y - particles[j].y))), 2);
 
-						var cSq = a + b;
-						var c = Math.sqrt(cSq);
-						if(c>125 && c < 213){
+                        var cSq = a + b;
+                        var c = Math.sqrt(cSq);
+                        if (c > 125 && c < 213) {
 
-						particlesContext.globalAlpha = 0.9 - Math.abs((c - 125)) / 100;
-						}
+                            particlesContext.globalAlpha = 0.9 - Math.abs((c - 125)) / 100;
+                        }
                         particlesContext.moveTo(particles[i].x, particles[i].y);
                         particlesContext.lineTo(particles[j].x, particles[j].y);
                         particlesContext.strokeStyle = "white";
@@ -169,51 +248,103 @@ canvas {
         particlesContext.fill();
 
     }, 30);
-///////////////////////////////////////////////////////PARTICLES
-	///////////////////////////////////////////////////////GRADIENT
-	//return rgb string so we can actually use variables in it
-	function rgb(r, g, b){
-  return "rgb("+r+","+g+","+b+")";
-}
-	//left and right side rgbs (shoulve made it left.r left.g etc but i was just trying to get a concept working, might update later)
-	var leftR = 255;
-	var leftG = 0;
-	var leftB = 255;
-	var rightR = 128;
-	var rightG = 128;
-	var rightB = 255;
-	var leftSpeed = -1;
-	var rightSpeed = -1;
-	var leftSpeedG = -1;
-	var rightSpeedG = -1;
+    ///////////////////////////////////////////////////////PARTICLES
+    ///////////////////////////////////////////////////////GRADIENT
+    //return rgb string so we can actually use variables in it
+    function rgb(r, g, b) {
+        return "rgb(" + r + "," + g + "," + b + ")";
+    }
+    //left and right side rgbs 
 
-	setInterval(function() {
-	backgroundContext.clearRect(0, 0, w, h);
-	backgroundGradient = backgroundContext.createLinearGradient(0,0,w,0);
-    backgroundGradient.addColorStop(0,rgb(leftR,leftG,leftB));
-	//backgroundGradient.addColorStop(0.5,"#0ab4da");
-	backgroundGradient.addColorStop(1,rgb(rightR,rightG,rightB));
-	backgroundContext.fillStyle = backgroundGradient;
-	backgroundContext.fillRect(0,0,w,h);
-    }, 1);
-	 setInterval(function() {
 
-		if(leftR>254){
-			leftSpeed = -1;
-		}
-		if(leftR<1){
-			leftSpeed = 1;
-		}
-		leftR += leftSpeed;
-		leftG -= leftSpeed;
-			if(rightR>254){
-			rightSpeed = -1;
-		}
-		if(rightR<1){
-			rightSpeed = 1;
-		}
-	rightR += rightSpeed;
-		rightG -= rightSpeed;
+
+
+    var leftRGB = document.getElementById("leftColor").value;
+    var rightRGB = document.getElementById("rightColor").value;
+    
+    console.log(leftRGB);
+    console.log(rightRGB);
+    function hexToRgb(hex, value) {
+        var hexplaced = hex.replace('#', '');
+        console.log(hex);
+        var bigint = parseInt(hexplaced, 16);
+
+        var r = (bigint >> 16) & 255;
+        var g = (bigint >> 8) & 255;
+        var b = bigint & 255;
+
+        if (value == 0) {
+         
+            return r;
+        } else if (value == 1) {
+            return g;
+        } else if (value == 2) {
+            return b;
+        } else {
+            return null;
+        }
+     
+    }
+
+
+    var leftR = hexToRgb(leftRGB, 0);
+
+    var leftG = hexToRgb(leftRGB, 1);
+    var leftB = hexToRgb(leftRGB, 2);
+
+    var rightR = hexToRgb(rightRGB, 0);
+    var rightG = hexToRgb(rightRGB, 1);
+    var rightB = hexToRgb(rightRGB, 2);
+
+    console.log(leftR, leftG, leftB);
+    var leftSpeed = -1;
+    var rightSpeed = -1;
+    var leftSpeedG = -1;
+    var rightSpeedG = -1;
+
+    setInterval(function () {
+        backgroundContext.clearRect(0, 0, w, h);
+        backgroundGradient = backgroundContext.createLinearGradient(0, 0, w, 0);
+        backgroundGradient.addColorStop(0, rgb(leftR, leftG, leftB));
+        //backgroundGradient.addColorStop(0.5,"#0ab4da");
+        backgroundGradient.addColorStop(1, rgb(rightR, rightG, rightB));
+        backgroundContext.fillStyle = backgroundGradient;
+        backgroundContext.fillRect(0, 0, w, h);
     }, 16);
+
+    setInterval(function() {
+
+if(leftR>254){
+    leftSpeed = -1;
+}
+if(leftR<1){
+    leftSpeed = 1;
+}
+leftR += leftSpeed;
+leftG -= leftSpeed;
+    if(rightR>254){
+    rightSpeed = -1;
+}
+if(rightR<1){
+    rightSpeed = 1;
+}
+rightR += rightSpeed;
+rightG -= rightSpeed;
+}, 16);
+
+    function changeLeftColor() {
+
+        leftRGB = document.getElementById("leftColor").value;
+        leftR = hexToRgb(leftRGB, 0);
+        leftG = hexToRgb(leftRGB, 1);
+        leftB = hexToRgb(leftRGB, 2);
+    }
+
+    function changeRightColor() {
+        rightRGB = document.getElementById("rightColor").value;
+        rightR = hexToRgb(rightRGB, 0);
+        rightG = hexToRgb(rightRGB, 1);
+        rightB = hexToRgb(rightRGB, 2);
+    }
 
 </script>
