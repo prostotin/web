@@ -1,6 +1,6 @@
 # Abstract Particle Generator
 One of those futuristic-looking things generator. 
-# Interactive demo: https://prostotin.github.io/web/particleGenerator/logic.html
+# Interactive demo: [Demo](particleGenerator/logic.html)
 ![Screenshot](https://i.imgur.com/s9u3VVe.jpg)
 
 
