@@ -81,7 +81,7 @@
  
     }
     #controlPanel:hover{
-    background-color: #fa73ff; 
+    background-color: purple; 
 
   color: white;
   }
@@ -149,6 +149,9 @@
     document.getElementById('particles').height = h;
 
     var backgroundCanvas = document.getElementById("backgroundGradient");
+    document.getElementById("backgroundGradient").height = h;
+    document.getElementById("backgroundGradient").width = w;
+
     var backgroundContext = backgroundCanvas.getContext("2d");
     var backgroundGradient = backgroundContext.createLinearGradient(0, 0, w, 0);
     var particles = []; //new Array[{xspeed:2, yspeed:2, x:100, y:100};
