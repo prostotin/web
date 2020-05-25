@@ -7,6 +7,6 @@ One of those futuristic-looking things generator.
 
 
 # Discord bot
-Simple bot that you can host on node.js to interact with other bots or users. 
+A Discord(chat app) bot written using a powerful node.js module that allows you to interact with Discord API.
 
 ![Screenshot](https://i.imgur.com/XfNNbNQ.png)
