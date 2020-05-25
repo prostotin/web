@@ -13,13 +13,13 @@
     <title>Oleksandr Prostotin's website</title>
 </head>
 
-<body scroll="no" style="overflow: hidden">
+<body scroll="no" style="overflow: hidden" onresize="resizeBackground()">
 
 
 
-    <canvas id="backgroundGradient" width="1920" height="1009" class="background">Canvas is not supported in your
+    <canvas id="backgroundGradient" width="1920" height="1080" class="background">Canvas is not supported in your
         browser.</canvas>
-    <canvas id="particles" width="1920" height="1009" class="particles">Canvas is not supported in your
+    <canvas id="particles" width="1920" height="1080" class="particles">Canvas is not supported in your
         browser.</canvas>
 
     <style>
@@ -28,21 +28,21 @@
             text-shadow: 2px 3px 10px #000000;
         }
     </style>
-    <button type="button" id="controlPanel" onclick="toggleControlPanel()" >Toggle Control Panel</button>
-    <div id = "shadow"> 
+    <button type="button" id="controlPanel" onclick="toggleControlPanel()">Toggle Control Panel</button>
+    <div id="shadow">
         <div>
-        <p style="position: relative; font-size:30px;">Number of dots (1-300):</p>
-        <input type="range" min="1" max="300" value="50" class="slider" id="particleAmount">
-        <p style="position: relative; font-size:30px; " for="leftColor">Select left color:</p>
-        <input style="position: relative;" type="color" id="leftColor" name="leftColor" value="#d142f5"
-            onchange="changeLeftColor()"><br><br>
-        <p style="position: relative; font-size:30px; " for="rightColor">Select right color:</p>
-        <input style="position: relative;" type="color" id="rightColor" name="rightColor" value="#42f5ef"
-            onchange="changeRightColor()"><br><br>
+            <p style="position: relative; font-size:30px;">Number of dots (1-300):</p>
+            <input type="range" min="1" max="300" value="50" class="slider" id="particleAmount">
+            <p style="position: relative; font-size:30px; " for="leftColor">Select left color:</p>
+            <input style="position: relative;" type="color" id="leftColor" name="leftColor" value="#d142f5"
+                onchange="changeLeftColor()"><br><br>
+            <p style="position: relative; font-size:30px; " for="rightColor">Select right color:</p>
+            <input style="position: relative;" type="color" id="rightColor" name="rightColor" value="#42f5ef"
+                onchange="changeRightColor()"><br><br>
+        </div>
     </div>
-</div>
 
-   
+
 
 
 </body>
@@ -50,41 +50,45 @@
 </html>
 <style>
     * {
- font-size: 30px;
- font-family: Arial;
-}
+        font-size: 30px;
+        font-family: Arial;
+    }
+
     .particles {
         opacity: 1;
     }
-  
+
 
     .background {
         opacity: 1;
     }
-    #shadow{
+
+    #shadow {
         position: relative;
-        background: rgba(0,0,0,0.4);
+        background: rgba(0, 0, 0, 0.4);
         width: 25%;
         border-radius: 10px;
     }
-    #controlPanel{
-        position: relative;
-       
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  border-radius: 12px;
-  transition-duration: 0.4s;
-  border: none;
- 
-    }
-    #controlPanel:hover{
-    background-color: purple; 
 
-  color: white;
-  }
+    #controlPanel {
+        position: relative;
+
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        border-radius: 12px;
+        transition-duration: 0.4s;
+        border: none;
+
+    }
+
+    #controlPanel:hover {
+        background-color: purple;
+
+        color: white;
+    }
 
     .slider {
         -webkit-appearance: none;
@@ -156,23 +160,24 @@
     var backgroundGradient = backgroundContext.createLinearGradient(0, 0, w, 0);
     var particles = []; //new Array[{xspeed:2, yspeed:2, x:100, y:100};
     var multiplier = 1.5;
-    //if we're on mobile limit the amount of particles to 25 because it looks really bad with more than that
 
-	/*var maxParticlesCount;
-	if(isMobile.any()){
-    maxParticlesCount = 25;
-	} else{
-		maxParticlesCount = 150;
-	}
-    */
+    function myFunction() {
+        var w = window.outerWidth;
+        var h = window.outerHeight;
+           document.getElementById('particles').width = w;
+    document.getElementById('particles').height = h;
+    document.getElementById("backgroundGradient").height = h;
+    document.getElementById("backgroundGradient").width = w;
 
-    if(isMobile.any()){
-    
-    document.getElementById("shadow").style.width = "95%";
+    }
 
-	} else{
-		maxParticlesCount = 150;
-	}
+    if (isMobile.any()) {
+
+        document.getElementById("shadow").style.width = "95%";
+
+    } else {
+        maxParticlesCount = 150;
+    }
 
     var amountSlider = document.getElementById("particleAmount");
 
@@ -306,7 +311,7 @@
 
     var leftRGB = document.getElementById("leftColor").value;
     var rightRGB = document.getElementById("rightColor").value;
-    
+
     console.log(leftRGB);
     console.log(rightRGB);
     function hexToRgb(hex, value) {
@@ -319,7 +324,7 @@
         var b = bigint & 255;
 
         if (value == 0) {
-         
+
             return r;
         } else if (value == 1) {
             return g;
@@ -328,7 +333,7 @@
         } else {
             return null;
         }
-     
+
     }
 
 
@@ -357,25 +362,25 @@
         backgroundContext.fillRect(0, 0, w, h);
     }, 16);
 
-    setInterval(function() {
+    setInterval(function () {
 
-if(leftR>254){
-    leftSpeed = -1;
-}
-if(leftR<1){
-    leftSpeed = 1;
-}
-leftR += leftSpeed;
-leftG -= leftSpeed;
-    if(rightR>254){
-    rightSpeed = -1;
-}
-if(rightR<1){
-    rightSpeed = 1;
-}
-rightR += rightSpeed;
-rightG -= rightSpeed;
-}, 16);
+        if (leftR > 254) {
+            leftSpeed = -1;
+        }
+        if (leftR < 1) {
+            leftSpeed = 1;
+        }
+        leftR += leftSpeed;
+        leftG -= leftSpeed;
+        if (rightR > 254) {
+            rightSpeed = -1;
+        }
+        if (rightR < 1) {
+            rightSpeed = 1;
+        }
+        rightR += rightSpeed;
+        rightG -= rightSpeed;
+    }, 16);
 
     function changeLeftColor() {
 
@@ -392,14 +397,14 @@ rightG -= rightSpeed;
         rightB = hexToRgb(rightRGB, 2);
     }
 
-function toggleControlPanel(){
-    if(document.getElementById("shadow").style.display === "none"){
-        document.getElementById("shadow").style.display = "block";
-    } else{
-        document.getElementById("shadow").style.display = "none";
+    function toggleControlPanel() {
+        if (document.getElementById("shadow").style.display === "none") {
+            document.getElementById("shadow").style.display = "block";
+        } else {
+            document.getElementById("shadow").style.display = "none";
+        }
+
     }
- 
-}
 
 
 </script>
