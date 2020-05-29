@@ -9,14 +9,9 @@
 
 <body>
 
-
-    <div id="app">
+     <div id="app">
         <h1>{{ message }}</h1>
     </div>
-
-
-
-
 
     <div class="container">
         <div class="row">
@@ -61,7 +56,6 @@
     }
 </style>
 
-
 <script>
     var myObject = new Vue({
         el: '#app',
@@ -74,44 +68,18 @@
             update: function () {
                 document.getElementById('qrcodegenerated').innerHTML = "<h1>" + "QRCode generated for: " + document.getElementById('link').value + "</h1>";
                 var link = document.getElementById('link').value;
-                var request = "\<img src=\"https://qrtag.net/api/qr_12.svg?url=" + link + " alt=\"qrtag\">"
+                var request = "\<img src=\"https://qrtag.net/api/qr_12.svg?url=" + link + "\" alt=\"qrtag\">"
                 document.getElementById('qrimage').innerHTML = request
-
+                var localStorageLink ="https://qrtag.net/api/qr_12.svg?url=" + link
                 if (typeof (Storage) !== "undefined") {
-                    localStorage.setItem(link, request);
-                    
+                    localStorage.setItem(link, localStorageLink);
                 }
-               
-                // iterate localStorage
-                for (var i = 0; i < localStorage.length; i++) {
-
-                    // set iteration key name
-                    var key = localStorage.key(i);
-
-                    // use key name to retrieve the corresponding value
-                    var value = localStorage.getItem(key);
-
-                    // console.log the iteration key and value
-                    console.log('Key: ' + key + ', Value: ' + value);
-
-                }
-
             }
         }
 
     })
-
-
-  
-
-
-
-
     var myObject = new Vue({
         el: '#qrcodegenerated',
         data: { message: '' }
     })
-
-
-
 </script>
