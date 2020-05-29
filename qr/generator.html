@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+</head>
+<html>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+
+<body>
+
+
+    <div id="app">
+        <h1>{{ message }}</h1>
+    </div>
+
+
+
+
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <input id="link" class="form-control col" type="text" placeholder="Paste/enter a link">
+            </div>
+            <div class="col" id="generateButton">
+                <button type="button" v-on:click="update()" class="btn btn-secondary col">Generate</button>
+            </div>
+            <div class="col" id="historyButton">
+                <a type="button" href="history.html" class="btn btn-secondary col">History</a>
+            </div>
+        </div>
+
+        <div id="qrcodegenerated">
+            <h1> {{ message }}</h1>
+        </div>
+
+        <div id="qrimage">
+
+        </div>
+
+
+</body>
+
+</html>
+
+<style>
+    * {
+        text-align: center !important;
+        margin: auto !important;
+    }
+
+    h1 {
+        margin: auto;
+        color: lightgray;
+
+    }
+
+    body {
+        background-color: #222222;
+    }
+</style>
+
+
+<script>
+    var myObject = new Vue({
+        el: '#app',
+        data: { message: 'Welcome! Please enter a link' }
+    })
+
+    var myObject = new Vue({
+        el: '#generateButton',
+        methods: {
+            update: function () {
+                document.getElementById('qrcodegenerated').innerHTML = "<h1>" + "QRCode generated for: " + document.getElementById('link').value + "</h1>";
+                var link = document.getElementById('link').value;
+                var request = "\<img src=\"https://qrtag.net/api/qr_12.svg?url=" + link + " alt=\"qrtag\">"
+                document.getElementById('qrimage').innerHTML = request
+
+                if (typeof (Storage) !== "undefined") {
+                    localStorage.setItem(link, request);
+                    
+                }
+               
+                // iterate localStorage
+                for (var i = 0; i < localStorage.length; i++) {
+
+                    // set iteration key name
+                    var key = localStorage.key(i);
+
+                    // use key name to retrieve the corresponding value
+                    var value = localStorage.getItem(key);
+
+                    // console.log the iteration key and value
+                    console.log('Key: ' + key + ', Value: ' + value);
+
+                }
+
+            }
+        }
+
+    })
+
+
+  
+
+
+
+
+    var myObject = new Vue({
+        el: '#qrcodegenerated',
+        data: { message: '' }
+    })
+
+
+
+</script>
