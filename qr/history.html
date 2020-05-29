@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+</head>
+<html>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+
+<body>
+    <div id="app">
+        <h1>{{ message }}</h1>
+    </div>
+
+
+
+</body>
+
+</html>
+
+<style>
+    * {
+        text-align: center !important;
+        margin: auto !important;
+    }
+
+    h1 {
+        margin: auto;
+        color: lightgray;
+
+    }
+
+    body {
+        background-color: white;
+    }
+</style>
+
+
+<script>
+
+    function loadHistory() {
+
+
+        var historyTable = document.createElement("TABLE");
+        historyTable.setAttribute("id", "historyTable");
+        document.body.appendChild(historyTable);
+
+
+
+        
+        for (var i = 0; i < localStorage.length; i++) {
+
+            // set iteration key name
+            var key = localStorage.key(i);
+
+            // use key name to retrieve the corresponding value
+            var value = localStorage.getItem(key);
+            var y = document.createElement("TR");
+            y.setAttribute("id", "myTr");
+            document.getElementById("myTable").appendChild(y);
+
+            var z = document.createElement("TD");
+            var t = document.createTextNode(key);
+            var u = document.createTextNode(value);
+            z.appendChild(t);
+            z.appendChild(u);
+            document.getElementById("myTr").appendChild(z);
+
+            // console.log the iteration key and value
+
+            console.log('Key: ' + key + ', Value: ' + value);
+
+        }
+
+
+    }
+
+
+
+    var myObject = new Vue({
+        el: '#app',
+        data: { message: 'Find your history here' }
+    })
+
+
+</script>
