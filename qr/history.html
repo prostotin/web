@@ -12,8 +12,6 @@
         <h1>{{ message }}</h1>
     </div>
 
-
-
 </body>
 
 </html>
@@ -22,8 +20,18 @@
     * {
         text-align: center !important;
         margin: auto !important;
+        color: lightgray;
+        padding: 10px;
     }
-
+    table {
+    table-layout : fixed;
+    vertical-align: bottom !important;
+    text-align:center;
+}
+td{
+    vertical-align: bottom;
+    font-size:30px;
+}
     h1 {
         margin: auto;
         color: lightgray;
@@ -31,51 +39,51 @@
     }
 
     body {
-        background-color: white;
+        background-color: #222222;
     }
 </style>
 
 
 <script>
 
-    function loadHistory() {
+    var historyTable = document.createElement("TABLE");
+    historyTable.setAttribute("id", "historyTable");
+    document.body.appendChild(historyTable);
+    historyTable.setAttribute("class", "table table-bordered table-dark");
 
 
-        var historyTable = document.createElement("TABLE");
-        historyTable.setAttribute("id", "historyTable");
-        document.body.appendChild(historyTable);
+    console.log(localStorage.length);
+    for (var i = 0; i < localStorage.length; i++) {
 
+       
+        var key = localStorage.key(i);
 
+       
+        var value = localStorage.getItem(key);
+        var row = document.createElement("TR");
+        row.setAttribute("id", "myTr" + i);
+        document.getElementById("historyTable").appendChild(row);
 
+        var linkCell = document.createElement("TD");
+        var a = document.createElement('a');
+        var text = document.createTextNode(key);
+        a.href = key;
+        a.text = key;
+        var qrCell = document.createElement("TD");
+        var image = document.createElement("IMG");
+        image.setAttribute("src", value);
         
-        for (var i = 0; i < localStorage.length; i++) {
+        image.setAttribute("width", "200");
+        image.setAttribute("height", "200");
+        linkCell.appendChild(a);
+        qrCell.appendChild(image);
+        document.getElementById("myTr"+ i).appendChild(linkCell);
+        document.getElementById("myTr"+ i).appendChild(qrCell);
 
-            // set iteration key name
-            var key = localStorage.key(i);
-
-            // use key name to retrieve the corresponding value
-            var value = localStorage.getItem(key);
-            var y = document.createElement("TR");
-            y.setAttribute("id", "myTr");
-            document.getElementById("myTable").appendChild(y);
-
-            var z = document.createElement("TD");
-            var t = document.createTextNode(key);
-            var u = document.createTextNode(value);
-            z.appendChild(t);
-            z.appendChild(u);
-            document.getElementById("myTr").appendChild(z);
-
-            // console.log the iteration key and value
-
-            console.log('Key: ' + key + ', Value: ' + value);
-
-        }
-
+     
+        console.log('Key: ' + key + ', Value: ' + value);
 
     }
-
-
 
     var myObject = new Vue({
         el: '#app',
