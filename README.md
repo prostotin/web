@@ -8,7 +8,7 @@ Generates a QR code for a given link. Uses QRtag.net API
 
 # Interactive demo: [Demo](qr/generator.html)
 
-![Screenshot](https://i.imgur.com/k73qlcE.png)
+![Screenshot](https://i.imgur.com/pdvy9yj.png)
 
 # Discord bot
 A Discord(chat app) bot written using a powerful node.js module that allows you to interact with Discord API.
